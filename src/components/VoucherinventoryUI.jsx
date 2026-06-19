@@ -12,6 +12,7 @@ const emptyVoucherRow = () => ({
 function Modal({ open, title, onClose, children, width = "900px" }) {
   if (!open) return null;
 
+
   return (
     <div className="vi-modal-overlay" onClick={onClose}>
       <div
@@ -54,6 +55,24 @@ export default function VoucherinventoryUI() {
 
   const [expandedBrand, setExpandedBrand] = useState(null);
   const [selectedDenominationMap, setSelectedDenominationMap] = useState({});
+
+
+const maskVoucher = (voucher = "") => {
+  if (!voucher) return "-";
+
+  const parts = voucher.split("-");
+
+  // agar hyphen hai to last part dikhao
+  if (parts.length > 1) {
+    return `XXXX-XXXX-${parts[parts.length - 1]}`;
+  }
+
+  // agar normal voucher hai
+  const firstChar = voucher.charAt(0);
+  return `${firstChar}XXXXXXX`;
+};
+/*========Uper check the==========*/
+
 
   const [form, setForm] = useState({
     brandName: "",
@@ -504,7 +523,7 @@ export default function VoucherinventoryUI() {
                   ) : (
                     form.addVouchers.map((item, idx) => (
                       <div className="vi-voucher-preview-item" key={idx}>
-                        <span>{item.voucher || "-"}</span>
+                        <span>{maskVoucher(item.voucher)}</span>
                         <span>PIN: {item.pin || "-"}</span>
                         <span>Validity: {item.validityTill || "-"}</span>
                       </div>
@@ -620,7 +639,7 @@ export default function VoucherinventoryUI() {
                                           className={row.status === "USED" ? "vi-row-used" : ""}
                                         >
                                           <td>{index + 1}</td>
-                                          <td>{row.voucher}</td>
+                                          <td>{maskVoucher(row.voucher)}</td>
                                           <td>{row.pin}</td>
                                           <td>{row.validityTill}</td>
                                           <td>
